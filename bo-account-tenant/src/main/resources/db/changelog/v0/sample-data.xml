@@ -1,0 +1,42 @@
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd
+    http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
+
+    <changeSet author="xuyufan" id="175">
+        <loadData catalogName="customer"
+                  encoding="UTF-8"
+                  file="data/Customer.csv"
+                  quotchar="'"
+                  schemaName="public"
+                  separator=","
+                  tableName="customer_entity">
+        </loadData>
+        <loadData catalogName="account"
+                  encoding="UTF-8"
+                  file="data/Account.csv"
+                  quotchar="'"
+                  schemaName="public"
+                  separator=","
+                  tableName="account_entity">
+        </loadData>
+        <loadData catalogName="tenant"
+                  encoding="UTF-8"
+                  file="data/Tenant.csv"
+                  quotchar="'"
+                  schemaName="public"
+                  separator=","
+                  tableName="tenant_entity">
+        </loadData>
+        <loadData catalogName="contact"
+                  encoding="UTF-8"
+                  file="data/Contact.csv"
+                  quotchar="'"
+                  schemaName="public"
+                  separator=","
+                  tableName="contact_entity">
+        </loadData>
+        <rollback/>
+    </changeSet>
+
+</databaseChangeLog>

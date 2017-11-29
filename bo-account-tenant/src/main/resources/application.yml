@@ -1,0 +1,33 @@
+server:
+  port: 31027
+
+spring:
+  profiles:
+    active: dev
+  messages:
+    basename: l10n/exceptions,i18n/ats-messages
+  jackson:
+    date-format: com.fasterxml.jackson.databind.util.ISO8601DateFormat
+    serialization:
+      WRITE_DATES_AS_TIMESTAMPS: false
+  jpa:
+    generate-ddl: false
+    hibernate:
+      ddl-auto: none
+    properties:
+      org:
+        hibernate:
+          envers:
+            use_revision_entity_with_native_id: false
+
+itsma:
+  suiteSSOEnabled: true
+
+logging:
+    file: ./logs/account-ats-service.log
+    config: classpath:logging/logback-spring.xml
+
+info:
+    app:
+        name: Back Office ATS
+        description: The term \"software multitenancy\" refers to a software architecture in which a single instance of software runs on a server and serves multiple tenants. A ats is a group of users who share a common access with specific privileges to the software instance. With a multitenant architecture, a software application is designed to provide every ats a dedicated share of the instance - including its data, configuration, user management, ats individual functionality and non-functional properties. Multitenancy contrasts with multi-instance architectures, where separate software instances operate on behalf of different tenants. <BR><BR> In a multitenancy environment, multiple customers share the same application, running on the same operating system, on the same hardware, with the same data-storage mechanism. The distinction between the customers is achieved during application design, thus customers do not share or see each other's data. Compare this with virtualization where components are transformed, enabling each customer application to appear to run on a separate virtual machine.

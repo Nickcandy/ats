@@ -1,0 +1,12 @@
+target
+logs
+.gradle
+.idea
+*.iml
+*.ipr
+*.iws
+app.war
+settings.json
+.vscode/*
+/com
+*.orig

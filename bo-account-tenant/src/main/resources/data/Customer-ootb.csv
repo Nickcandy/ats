@@ -1,0 +1,2 @@
+id,name,display_label,full_name,short_name,status,contact,description,is_sys_data
+10000,System Customer,System Customer,System Customer,System Customer,ACTIVE,HPE Admin,This is an account used for out of the box data. Please do not update or delete this.,TRUE

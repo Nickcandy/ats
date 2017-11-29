@@ -1,0 +1,69 @@
+banner:
+  location: classpath:banners/banner-prod.txt
+
+liquibase:
+  change-log: classpath:/db/changelog/db.changelog-master-kube.xml
+  url: jdbc:postgresql://itom-xservices-postgres-svc:30432/bo_ats
+  user: boadmin
+  password: 123456
+  drop-first: false
+
+spring:
+  datasource:
+    url: jdbc:postgresql://itom-xservices-postgres-svc:30432/bo_ats
+    username: boadmin
+    password: 123456
+    driver-class-name: org.postgresql.Driver
+    platform: postgresql
+
+saw:
+  url:
+    schema: https
+    port: 8080
+  schema: http
+  host: cobhl5fxiz.hpeswlab.net
+  port: 8000
+  cluster-host: ${saw.cluster.host:itsmax-x-master07.hpeswlab.net}
+  tenant:
+    service:
+      uri: /platform-config/tenant-callback-path
+    clone:
+      uri: /TenantManagement/clone
+      processStatusUri: /TenantManagement/clone/{0}
+  saas-integration:
+    tenant: ${saw.tenant:100000007}
+    operatorTenant: ${saw.operator.tenant:857561481}
+    operatorAdminUser: ${saw.operator.admin.user:saas.integration.user-hp.com}
+    operatorAdminUserPassword: ${saw.operator.admin.user.password:nmbipsdxTSFAD341}
+  callback:
+    service:
+      host: itom-xservices-ats-svc
+      port: 31027
+      url: /tenants/deploy/callback
+
+bo:
+  gateway:
+    schema: http
+    host: bo-gateway-svc
+    port: 31024
+    uri: /bo/token
+  user:
+    schema: http
+    host: bo-user-svc
+    port: 31028
+    uri: /user/{0}
+    tenant-user-uri: /user/tenants
+    account-user-uri: /user/account/{0}?pageSize={1}&start={2}
+  license:
+    schema: http
+    host: bo-license-svc
+    port: 31041
+
+idm:
+  schema: https
+  host: itom-xservices-gateway-svc
+  port: 31024
+  auth-uri: /auth/authentication-endpoint/authenticate/login?login={0}&password={1}&tenantId={2}
+
+itsma:
+  suiteSSOEnabled: true

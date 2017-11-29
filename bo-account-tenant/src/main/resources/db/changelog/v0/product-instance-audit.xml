@@ -1,0 +1,72 @@
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd
+    http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
+
+    <changeSet author="yan" id="45">
+
+        <createTable remarks="To record data change of product instances" tableName="product_instance_entity_aud">
+            <column name="id" type="BIGINT">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="rev" type="BIGINT" >
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="revtype" type="BIGINT" >
+            </column>
+            <column name="name" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="code" type="varchar(20)">
+                <constraints nullable="true" />
+            </column>
+            <column name="display_label" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+            <column name="description" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+            <column name="created_at" type="DATETIME">
+                <constraints nullable="true" />
+            </column>
+            <column name="owner_id" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+            <column name="created_by" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+            <column name="last_updated_by" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+            <column name="last_updated_at" type="DATETIME">
+                <constraints nullable="true" />
+            </column>
+            <column name="is_deleted" type="BOOLEAN">
+                <constraints nullable="true"/>
+            </column>
+            <column name="is_sys_data" type="BOOLEAN">
+                <constraints nullable="true" />
+            </column>
+            <column name="namespace_id" type="BIGINT">
+                <constraints nullable="true" />
+            </column>
+            <column name="suite_instance_id" type="BIGINT">
+                <constraints nullable="true" />
+            </column>
+            <column name="url_public" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+            <column name="url_internal" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+            <column name="product_type" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+        </createTable>
+
+        <rollback>
+            drop table IF EXISTS product_instance_entity_aud;
+        </rollback>
+    </changeSet>
+
+</databaseChangeLog>

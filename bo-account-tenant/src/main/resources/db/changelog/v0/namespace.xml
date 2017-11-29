@@ -1,0 +1,79 @@
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd
+    http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
+
+    <changeSet author="xiaodong" id="20">
+
+        <createTable tableName="namespace_entity">
+            <!-- BaseEntity column -->
+            <column name="id" type="BIGINT">
+                <constraints primaryKey="true" nullable="false" primaryKeyName="NS_KEY"/>
+            </column>
+            <column name="name" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+            <column name="display_label" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+            <column name="description" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+            <column name="code" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+            <column name="owner_id" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+            <column name="created_at" type="DATETIME">
+                <constraints nullable="true" />
+            </column>
+            <column name="created_by" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+            <column name="last_updated_by" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+            <column name="last_updated_at" type="DATETIME">
+                <constraints nullable="true" />
+            </column>
+            <column name="is_deleted" type="BOOLEAN">
+                <constraints nullable="true" />
+            </column>
+            <column name="is_sys_data" type="BOOLEAN">
+                <constraints nullable="true" />
+            </column>
+            <!-- Customer Entity Customize column -->
+            <column name="namespace_type" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+            <column name="namespace_state" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+            <column name="identifier_in_k8s" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+            <column name="login_url" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+            <column name="host_url_list" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+
+        </createTable>
+
+        <sql>
+            ALTER TABLE namespace_entity
+            ADD CONSTRAINT CHK_ns_type CHECK (namespace_type IN ('PLATFORM', 'PROD', 'R_D', 'POC'));
+            ALTER TABLE namespace_entity
+            ADD CONSTRAINT CHK_ns_state CHECK (namespace_state IN ('ACTIVE', 'PENDING_FOR_DISPOSAL', 'DISPOSED', 'NOT_READY'));
+        </sql>
+
+        <rollback>
+            ALTER TABLE namespace_entity DROP CONSTRAINT CHK_ns_type;
+            ALTER TABLE namespace_entity DROP CONSTRAINT CHK_ns_state;
+            drop table IF EXISTS namespace_entity;
+        </rollback>
+    </changeSet>
+
+</databaseChangeLog>

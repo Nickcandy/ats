@@ -1,0 +1,2 @@
+id,name,display_label,description,created_by,tenant_type,account_id,owner_id,is_sys_data
+100000002,ITSMA tenant,ITSMA tenant,Please do not update this tenant since it is reserved integrations,10000,DEV,10000,10000,TRUE

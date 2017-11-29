@@ -1,0 +1,62 @@
+banner:
+  location: classpath:banners/banner-test.txt
+
+spring:
+  datasource:
+    generate-unique-name: true
+
+liquibase:
+  change-log: classpath:/db/changelog/db.changelog-master-test.xml
+
+info:
+  app:
+    version: 0.0.1 TEST MODE
+
+saw:
+  url:
+    schema: https
+    port: 8080
+  schema: http
+  host: cobhl5fxiz.hpeswlab.net
+  port: 8000
+  cluster-host: itsmax-x-master07.hpeswlab.net
+  tenant:
+    service:
+      uri: /platform-config/tenant-callback-path
+    clone:
+      uri: /TenantManagement/clone
+      processStatusUri: /TenantManagement/clone/{0}
+  saas-integration:
+    tenant: 100000007
+    operatorTenant: 857561481
+    operatorAdminUser: saas.integration.user-hp.com
+    operatorAdminUserPassword: nmbipsdxTSFAD341
+  callback:
+    service:
+      host: localhost
+      port: 9527
+      url: /tenants/deploy/callback
+
+bo:
+  gateway:
+    schema: http
+    host: minikube
+    port: 31024
+    uri: /bo/token
+  user:
+    schema: http
+    host: minikube
+    port: 31028
+    uri: /user/{0}
+    tenant-user-uri: /user/tenants
+    account-user-uri: /user/account/{0}?pageSize={1}&start={2}
+  license:
+    schema: http
+    host: bo-license-svc
+    port: 31041
+
+idm:
+  schema: https
+  host: sgdlitvm0198.hpeswlab.net
+  port: 9600
+  auth-uri: idm-service/idm/v0/api/public/authenticate

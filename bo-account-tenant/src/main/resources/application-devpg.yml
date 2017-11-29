@@ -1,0 +1,69 @@
+banner:
+  location: classpath:banners/banner-dev.txt
+
+liquibase:
+  change-log: classpath:/db/changelog/db.changelog-master.xml
+  url: jdbc:postgresql://itom-xservices-postgres-svc:5432/bo_ats_yan
+  user: bo_ats_admin
+  password: bo_ats_admin_123
+  drop-first: true
+
+spring:
+  datasource:
+    url: jdbc:postgresql://itom-xservices-postgres-svc:5432/bo_ats_yan
+    username: bo_ats_admin
+    password: bo_ats_admin_123
+    driver-class-name: org.postgresql.Driver
+    platform: postgresql
+
+info:
+  app:
+    version: 0.0.1 DEV MODE
+
+saw:
+  url:
+    schema: https
+    port: 8080
+  schema: http
+  host: cobhl5fxiz.hpeswlab.net
+  port: 8000
+  cluster-host: itsmax-x-master07.hpeswlab.net
+  tenant:
+    service:
+      uri: /platform-config/tenant-callback-path
+    clone:
+      uri: /TenantManagement/clone
+      processStatusUri: /TenantManagement/clone/{0}
+  saas-integration:
+    tenant: 100000007
+    operatorTenant: 857561481
+    operatorAdminUser: saas.integration.user-hp.com
+    operatorAdminUserPassword: nmbipsdxTSFAD341
+  callback:
+    service:
+      host: itom-xservices-ats-svc
+      port: 31027
+      url: /tenants/deploy/callback
+
+bo:
+  gateway:
+    schema: http
+    host: minikube
+    port: 31024
+    uri: /bo/token
+  user:
+    schema: http
+    host: minikube
+    port: 31028
+    uri: /user/{0}
+    tenant-user-uri: /user/tenants
+  license:
+    schema: http
+    host: bo-license-svc
+    port: 31041
+
+idm:
+  schema: https
+  host: itom-xservices-gateway-svc
+  port: 31024
+  auth-uri: bo/token

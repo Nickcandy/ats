@@ -1,0 +1,18 @@
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd
+    http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
+    <preConditions onFail="WARN">
+        <sqlCheck expectedResult="1">
+            select CASE WHEN MAX(id) is null then '0' else MAX(id) END FROM databasechangelog WHERE author='MajorVersion'
+        </sqlCheck>
+    </preConditions>
+    <include file="db/changelog/v1/tenant.xml" />
+
+    <!-- Do not include any more changes in this file -->
+    <!-- MajorVersion is the version identifier -->
+    <changeSet author="MajorVersion" id="2">
+        <tagDatabase tag="version_1_1"/>
+    </changeSet>
+
+</databaseChangeLog>

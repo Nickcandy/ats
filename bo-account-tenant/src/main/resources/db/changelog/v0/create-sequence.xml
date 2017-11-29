@@ -1,0 +1,49 @@
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd
+    http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
+
+    <!--changeSet author="yan" id="200">
+        <<createSequence cycle="false"
+                        incrementBy="1"
+                        schemaName="public"
+                        sequenceName="hibernate_sequence"
+                        startValue="10001"/>>
+        <createSequence cycle="false"
+                        incrementBy="1"
+                        schemaName="public"
+                        sequenceName="bo_seq"
+                        startValue="10001"/>
+        <createSequence cycle="false"
+                        incrementBy="1"
+                        schemaName="public"
+                        sequenceName="revision_generator"
+                        startValue="10001"/>
+    </changeSet-->
+
+    <changeSet author="yan" id="200">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <sequenceExists sequenceName="bo_seq"/>
+            </not>
+        </preConditions>
+        <createSequence cycle="false"
+                        incrementBy="1"
+                        schemaName="public"
+                        sequenceName="bo_seq"
+                        startValue="10001"/>
+    </changeSet>
+
+    <changeSet author="yan" id="201">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <sequenceExists sequenceName="revision_generator"/>
+            </not>
+        </preConditions>
+        <createSequence cycle="false"
+                        incrementBy="1"
+                        schemaName="public"
+                        sequenceName="revision_generator"
+                        startValue="10001"/>
+    </changeSet>
+</databaseChangeLog>

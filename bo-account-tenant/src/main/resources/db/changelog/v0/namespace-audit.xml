@@ -1,0 +1,70 @@
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd
+    http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
+
+    <changeSet author="xiaodong" id="25">
+        <createTable tableName="namespace_entity_aud">
+            <column name="id" type="BIGINT">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="rev" type="BIGINT" >
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="revtype" type="BIGINT" >
+            </column>
+            <column name="name" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+            <column name="display_label" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+            <column name="description" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+            <column name="code" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+            <column name="owner_id" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+            <column name="created_at" type="DATETIME">
+                <constraints nullable="true" />
+            </column>
+            <column name="created_by" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+            <column name="last_updated_by" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+            <column name="last_updated_at" type="DATETIME">
+                <constraints nullable="true" />
+            </column>
+            <column name="is_deleted" type="BOOLEAN">
+                <constraints nullable="true" />
+            </column>
+            <column name="is_sys_data" type="BOOLEAN">
+                <constraints nullable="true" />
+            </column>
+            <column name="namespace_type" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+            <column name="namespace_state" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+            <column name="identifier_in_k8s" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+            <column name="login_url" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+            <column name="host_url_list" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+        </createTable>
+        <rollback>
+            drop table IF EXISTS namespace_entity_aud;
+        </rollback>
+    </changeSet>
+
+</databaseChangeLog>

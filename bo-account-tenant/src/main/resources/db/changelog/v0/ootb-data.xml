@@ -1,0 +1,63 @@
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd
+    http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
+
+    <changeSet author="xuyufan" id="150">
+        <loadData catalogName="namespaceOOTB"
+                  encoding="UTF-8"
+                  file="data/Namespace-ootb.csv"
+                  quotchar="'"
+                  schemaName="public"
+                  separator=","
+                  tableName="namespace_entity">
+        </loadData>
+
+        <loadData catalogName="suiteInstanceOOTB"
+                  encoding="UTF-8"
+                  file="data/Suite-instance-ootb.csv"
+                  quotchar="'"
+                  schemaName="public"
+                  separator=","
+                  tableName="suite_instance_entity">
+        </loadData>
+
+        <loadData catalogName="productInstanceOOTB"
+                  encoding="UTF-8"
+                  file="data/Product-instance-ootb.csv"
+                  quotchar="'"
+                  schemaName="public"
+                  separator=","
+                  tableName="product_instance_entity">
+        </loadData>
+
+        <loadData catalogName="customerOOTB"
+                  encoding="UTF-8"
+                  file="data/Customer-ootb.csv"
+                  quotchar="'"
+                  schemaName="public"
+                  separator=","
+                  tableName="customer_entity">
+        </loadData>
+
+        <loadData catalogName="accountOOTB"
+                  encoding="UTF-8"
+                  file="data/Account-ootb.csv"
+                  quotchar="'"
+                  schemaName="public"
+                  separator=","
+                  tableName="account_entity">
+        </loadData>
+
+        <loadData catalogName="tenantOOTB"
+                  encoding="UTF-8"
+                  file="data/Tenant-ootb.csv"
+                  quotchar="'"
+                  schemaName="public"
+                  separator=","
+                  tableName="tenant_entity">
+        </loadData>
+        <rollback/>
+    </changeSet>
+
+</databaseChangeLog>

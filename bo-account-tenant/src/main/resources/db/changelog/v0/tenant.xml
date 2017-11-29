@@ -1,0 +1,125 @@
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd
+    http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
+
+    <changeSet author="xuyufan" id="70">
+
+        <createTable remarks="A String" tableName="tenant_entity">
+            <column name="id" type="BIGINT">
+                <constraints primaryKey="true" nullable="false" primaryKeyName="TEN_PK"/>
+            </column>
+            <column name="name" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="code" type="varchar(20)">
+                <constraints nullable="true" />
+            </column>
+            <column name="display_label" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+            <column name="description" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+            <column name="created_at" type="DATETIME">
+                <constraints nullable="true" />
+            </column>
+            <column name="owner_id" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+            <column name="created_by" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+            <column name="last_updated_by" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+            <column name="last_updated_at" type="DATETIME">
+                <constraints nullable="true" />
+            </column>
+            <column name="is_deleted" type="BOOLEAN">
+                <constraints nullable="true"/>
+            </column>
+            <column name="is_sys_data" type="BOOLEAN">
+                <constraints nullable="true" />
+            </column>
+            <column name="account_id" type="BIGINT">
+                <constraints nullable="true" />
+            </column>
+            <column name="tenant_type" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+            <column name="tenant_state" type="varchar(255)" defaultValue="NEW">
+                <constraints nullable="true" />
+            </column>
+            <column name="tenant_environment" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+            <column name="namespace_id" type="BIGINT">
+                <constraints nullable="true" />
+            </column>
+            <column name="last_active_at" type="DATETIME">
+                <constraints nullable="true" />
+            </column>
+            <column name="is_msp_tenant" type="BOOLEAN">
+                <constraints nullable="true"/>
+            </column>
+            <column name="is_managed_tenant" type="BOOLEAN">
+                <constraints nullable="true"/>
+            </column>
+            <column name="suite_instance" type="BIGINT">
+                <constraints nullable="true" />
+            </column>
+            <column name="product_instance" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+
+            <column name="deploy_type" type="varchar(50)">
+                <constraints nullable="true" />
+            </column>
+
+            <column name="url" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+            <column name="service_of_product" type="BIGINT">
+                <constraints nullable="true" />
+            </column>
+            <column name="license_control_type" type="varchar(50)">
+                <constraints nullable="true" />
+            </column>
+            <column name="is_public" type="BOOLEAN">
+                <constraints nullable="true" />
+            </column>
+
+            <column name="tenant_admin_id" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+
+        </createTable>
+
+        <addForeignKeyConstraint baseColumnNames="account_id"
+                                 baseTableName="tenant_entity"
+                                 constraintName="ten_acc_fk"
+                                 referencedColumnNames="id"
+                                 referencedTableName="account_entity"/>
+        <sql>
+            ALTER TABLE tenant_entity
+            ADD CONSTRAINT CHK_tenant_type CHECK (tenant_type IN ('PRODUCTION', 'DEV', 'INTERNAL', 'TRIAL', 'TRIALPROVISION'));
+            ALTER TABLE tenant_entity
+            ADD CONSTRAINT CHK_tenant_state CHECK (tenant_state IN ('ACTIVE', 'INACTIVE', 'PENDING_FOR_REMOVAL', 'RETIRED', 'NEW', 'IN_PROVISION', 'REMOVED'));
+            ALTER TABLE tenant_entity
+            ADD CONSTRAINT CHK_tenant_environment CHECK (tenant_environment IN ('PROD', 'TEST', 'STAGING', 'POC', 'RND', 'UNKNOW', 'DR'));
+        </sql>
+
+        <rollback>
+            ALTER TABLE tenant_entity DROP CONSTRAINT CHK_tenant_type;
+            ALTER TABLE tenant_entity DROP CONSTRAINT CHK_tenant_state;
+            ALTER TABLE tenant_entity DROP CONSTRAINT CHK_tenant_environment;
+            drop table IF EXISTS tenant_entity;
+        </rollback>
+        <addDefaultValue columnDataType="BOOLEAN" columnName="is_deleted" defaultValueBoolean="false" tableName="tenant_entity"/>
+        <addDefaultValue columnDataType="BOOLEAN" columnName="is_sys_data" defaultValueBoolean="false" tableName="tenant_entity"/>
+        <addDefaultValue columnDataType="BOOLEAN" columnName="is_msp_tenant" defaultValueBoolean="false" tableName="tenant_entity"/>
+        <addDefaultValue columnDataType="BOOLEAN" columnName="is_managed_tenant" defaultValueBoolean="false" tableName="tenant_entity"/>
+    </changeSet>
+
+</databaseChangeLog>

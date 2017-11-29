@@ -1,0 +1,68 @@
+buildscript {
+	ext{
+		baseName="account-tenant-service"
+	}
+	repositories {
+		maven {
+			url "http://shcitsmaxdl01.hpeswlab.net:8081/nexus/content/groups/back-office-public"
+		}
+	}
+	dependencies {
+		classpath group: 'org.springframework.boot', name: 'spring-boot-gradle-plugin', version: '1.5.4.RELEASE'
+	}
+}
+repositories {
+	maven {
+		url "http://shcitsmaxdl01.hpeswlab.net:8081/nexus/content/groups/back-office-public"
+	}
+}
+
+buildDir = "${projectDir}/target"
+apply plugin: 'java'
+apply plugin: 'war'
+apply plugin: 'org.springframework.boot'
+apply plugin: 'maven'
+apply plugin: 'idea'
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+dependencies {
+	compile group: 'com.hpe.itsma.bo', name: 'bo-common', version: '0.0.1-SNAPSHOT'
+	compile group: 'org.springframework.boot', name: 'spring-boot-starter-web', version: '1.5.4.RELEASE'
+	compile group: 'org.springframework.boot', name: 'spring-boot-devtools', version: '1.5.4.RELEASE'
+	compile group: 'org.springframework.boot', name: 'spring-boot-starter-tomcat', version: '1.5.4.RELEASE'
+	compile group: 'org.springframework.boot', name: 'spring-boot-starter-data-jpa', version: '1.5.4.RELEASE'
+	compile group: 'org.springframework.security', name: 'spring-security-web', version: '4.2.3.RELEASE'
+	compile group: 'org.springframework.security', name: 'spring-security-config', version: '4.2.3.RELEASE'
+	compile group: 'org.hibernate', name: 'hibernate-core', version: '5.2.10.Final'
+
+	compile group: 'org.liquibase', name: 'liquibase-core', version: '3.5.3'
+	compile group: 'com.h2database', name: 'h2', version: '1.4.196'
+	testCompile group: 'org.springframework.security', name: 'spring-security-test', version: '4.2.3.RELEASE'
+	testCompile group: 'org.springframework.boot', name: 'spring-boot-starter-test', version: '1.5.4.RELEASE'
+
+	compile group: 'io.springfox', name: 'springfox-swagger2', version: '2.7.0'
+	compile group: 'com.fasterxml.jackson.datatype', name: 'jackson-datatype-jsr310', version: '2.8.8'
+}
+bootRun {
+	String activeProfile =  System.properties['spring.profiles.active']
+	systemProperty "spring.profiles.active", activeProfile
+}
+
+war {
+ 	baseName = "tenant-service"
+ 	doFirst{
+		if(System.properties['spring.profiles.active']==('prod')) {
+			version = "${releaseVersion}"
+			println ':PROD build, excluded dev resources'
+			rootSpec.exclude('**/api-spec')
+		} else {
+			version  "${snapshotVersion}"
+		}
+	}
+}
+
+artifacts {
+	archives war
+}

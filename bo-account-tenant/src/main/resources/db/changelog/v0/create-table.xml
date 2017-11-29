@@ -1,0 +1,34 @@
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd
+    http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
+
+    <include file="db/changelog/v0/envers-revinfo.xml" />
+
+    <include file="db/changelog/v0/namespace.xml" />
+    <include file="db/changelog/v0/namespace-audit.xml" />
+
+    <include file="db/changelog/v0/suite-instance.xml" />
+    <include file="db/changelog/v0/suite-instance-audit.xml" />
+
+    <include file="db/changelog/v0/product-instance.xml" />
+    <include file="db/changelog/v0/product-instance-audit.xml" />
+
+    <include file="db/changelog/v0/customer.xml" />
+    <include file="db/changelog/v0/customer-audit.xml"/>
+
+    <include file="db/changelog/v0/account.xml" />
+    <include file="db/changelog/v0/account-audit.xml" />
+
+    <include file="db/changelog/v0/tenant.xml" />
+    <include file="db/changelog/v0/tenant-audit.xml" />
+
+    <include file="db/changelog/v0/contact.xml" />
+    <include file="db/changelog/v0/contact-audit.xml" />
+
+    <include file="db/changelog/v0/tenant-contact-rel.xml" />
+    <include file="db/changelog/v0/tenant-contact-rel-audit.xml" />
+
+    <include file="db/changelog/v0/tenant-license-rel.xml" />
+    <include file="db/changelog/v0/tenant-license-rel-audit.xml" />
+</databaseChangeLog>

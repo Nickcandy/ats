@@ -1,0 +1,2 @@
+id,name,account_type,display_label,description,code,is_deleted,is_sys_data,account_status
+10000,System Account,TEST,System Account,This is created as itsma system data. Do not update or delete please.,sys-account,FALSE,TRUE,ACTIVE

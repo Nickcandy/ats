@@ -1,0 +1,74 @@
+banner:
+  location: classpath:banners/banner-dev.txt
+
+
+liquibase:
+  change-log: classpath:/db/changelog/db.changelog-master.xml
+  drop-first: true
+
+spring:
+  h2:
+    console:
+      path: /console
+      enabled: true
+  datasource:
+    driver-class-name: org.h2.Driver
+    url: jdbc:h2:~/test;MODE=PostgreSQL
+  jpa:
+    database-platform: org.hibernate.dialect.H2Dialect
+
+info:
+  app:
+    version: 0.0.1 DEV MODE
+#spring:
+#  datasource:
+#    data: classpath:data/sample-data.sql
+
+saw:
+  url:
+    schema: https
+    port: 8080
+  schema: http
+  host: bibgu24c0n.asiapacific.hpqcorp.net
+  port: 8000
+  cluster-host: itsmax-x-master07.hpeswlab.net
+  tenant:
+    service:
+      uri: /platform-config/tenant-callback-path
+    clone:
+      uri: /TenantManagement/clone
+      processStatusUri: /TenantManagement/clone/{0}
+  saas-integration:
+    tenant: 100000007
+    operatorTenant: 857561481
+    operatorAdminUser: itsmaidmadmin
+    operatorAdminUserPassword: itsmaidmadminPassw0rd
+  callback:
+    service:
+      host: localhost
+      port: 31027
+      url: /tenants/deploy/callback
+
+bo:
+  gateway:
+    schema: http
+    host: minikube
+    port: 31024
+    uri: /bo/token
+  user:
+    schema: http
+    host: minikube
+    port: 31028
+    uri: /user/{0}
+    tenant-user-uri: /user/tenants
+    account-user-uri: /user/account/{0}?pageSize={1}&start={2}
+  license:
+    schema: http
+    host: bo-license-svc
+    port: 31041
+
+idm:
+  schema: https
+  host: itsmax-x-master07.hpeswlab.net
+  port: 443
+  auth-uri: /auth/authentication-endpoint/authenticate/login?login={0}&password={1}&tenantId={2}

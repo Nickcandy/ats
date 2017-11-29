@@ -1,0 +1,175 @@
+@Library('bo') _
+pipeline {
+    agent {
+        label "${devDockerIntegreationHost}"
+    }
+    stages {
+        stage('Kill Last Build'){
+            steps{
+                script{
+                    env.GIT_COMMIT = sh(returnStdout: true, script: 'git rev-parse HEAD').trim()
+                    env.GIT_COMMIT_COMMENT = sh(returnStdout: true, script: 'git log -1 |tail -1').trim()
+                    Jenkins  j = Jenkins.instance
+                    Job job = j.getItemByFullName(JOB_NAME)
+                    def lastJobNumber =  job.getLastBuild().number - 1
+                    Run lastBuild =  job.getBuildByNumber(lastJobNumber);
+                    lastBuild.doKill()
+                }
+            }
+        }
+        stage('Build') {
+            agent{
+                docker {
+                    image 'shc-itsmax-harbor.hpeswlab.net/itsmax-bo/master/maven:3-jdk-8-alpine'
+                    args '-v $home/.m2:/root/.m2'
+                }
+            }
+            steps {
+                script{
+                    env.VERSION = sh(returnStdout: true, script: 'mvn -s /settings.xml  org.apache.maven.plugins:maven-help-plugin:2.1.1:evaluate -Dexpression=project.version |grep -v INFO |grep -v Downloading |grep -v Downloaded |grep SNAPSHOT').trim()
+
+                    sh 'echo "info.app.version=$VERSION" > src/main/resources/application.properties'
+                    sh 'echo "info.app.commit=$GIT_COMMIT" >> src/main/resources/application.properties'
+
+                    sh 'mvn -s /settings.xml clean package -U'
+
+                    upload2Nexus(this, 'account-tenant-service', env.VERSION, 'war', 'back-office', 'target')
+
+                    stash includes: '**/target/*.war', name: 'app'
+                }
+            }
+        }
+        stage('Dockerize'){
+            steps {
+                script {
+                    unstash 'app'
+                    sh '''
+                        cp Dockerfile target
+                        docker login shc-itsmax-harbor.hpeswlab.net -u ci_user -p Password1
+                        docker build -t shc-itsmax-harbor.hpeswlab.net/itsmax-bo/master/account-tenant-service:snapshots target
+                        docker push shc-itsmax-harbor.hpeswlab.net/itsmax-bo/master/account-tenant-service:snapshots
+                    '''
+                }
+            }
+        }
+        stage('RefreshDevFarm  + E2E Test') {
+            agent {
+                label "${devFarmMaster}"
+            }
+            steps {
+                script{
+                    withCredentials([string(credentialsId: 'git-readonly', variable: 'TOKEN')]) {
+                        env.BRANCH_NAME=scm.branches[0].name.substring(1);
+                        sh '''
+                            hostname -A
+                            SERVICE_DEPLOY_YML=bo-ats.yml
+
+                            rm -f $SERVICE_DEPLOY_YML
+                            curl --header "Authorization: token $TOKEN" --remote-name --location https://raw.github.houston.softwaregrp.net/ITSMA-X/bo-workspace/master/kube/config/$SERVICE_DEPLOY_YML
+                            kubectl delete -f $SERVICE_DEPLOY_YML   --ignore-not-found=true
+                            kubectl create -f $SERVICE_DEPLOY_YML
+                        '''
+                        waitForReady(this,'bo-ats')                        
+                    }
+                }
+                script{
+                    runE2E this
+                }
+            }
+        }
+        stage('Upload Release Version to Nexus') {
+            agent{
+                docker {
+                    image 'shc-itsmax-harbor.hpeswlab.net/itsmax-bo/master/maven:3-jdk-8-alpine'
+                    args '-v $home/.m2:/root/.m2'
+                }
+            }
+            steps {
+                script{
+                    if ('true' == "${release}" || "${GIT_COMMIT_COMMENT}".contains("@release")) {
+                        snapshots = sh(returnStdout: true, script: 'mvn -B -s /settings.xml dependency:list |grep -v Downloaded |grep -v Downloading |grep -v com.hp.saas.basecomponents:lean-api |grep -v MSGRestServices:msg-api-client-sdk|grep -i SNAPSHOT').trim().split('\n')
+
+                        if (snapshots.length > 1) {
+                            error 'snapshot dependency found, can not be released.' + snapshots
+                        }
+
+                        env.VERSION =  env.VERSION[0..-10]  + '.'  + env.BUILD_NUMBER
+                        echo "version: ${VERSION}"
+
+                        sh 'echo "info.app.version=$VERSION" > src/main/resources/application.properties'
+                        sh 'echo "info.app.commit=$GIT_COMMIT" >> src/main/resources/application.properties'
+                        
+                        sh '''
+                            mvn -s /settings.xml versions:set -DnewVersion=${VERSION}
+                            mvn -s /settings.xml clean package -U
+                        '''
+                        upload2Nexus(this, 'account-tenant-service', env.VERSION, 'war', 'back-office-release', 'target')
+                    }
+                }
+            }
+        }
+        stage('git tag') {
+            steps {
+                script{
+                    if ('true' == "${release}" || "${GIT_COMMIT_COMMENT}".contains("@release")) {
+                        sshagent(['maas_slave']) {
+                            sh '''
+                                git tag ${VERSION}
+                                git push origin ${VERSION}
+                            '''                            
+                        }
+                        currentBuild.description = "release: ${VERSION}"       
+                    }
+                }
+            }
+        }
+        stage('upgrade version to image') {
+            steps {
+                script {
+                    if (('true' == "${release}" || "${GIT_COMMIT_COMMENT}".contains("@release")) && 'true' == "${upgradeVersionToImage}") {
+                        sshagent(['yu-shen']) {
+                            env.OLD="bo-account-tenant.version=.*"
+                            env.NEW="bo-account-tenant.version=${VERSION}"
+
+                            sh '''
+                                rm -rf containerizing
+                                git clone "git@github.houston.softwaregrp.net:yu-shen/containerizing.git"
+                                cd containerizing
+
+                                git checkout master
+
+                                cmd="sed -i \\"s/${OLD}/${NEW}/g\\" ./itom-bo-images/bo/filters/ci.properties"
+                                echo "$cmd"
+                                eval "$cmd"
+
+                                git add .
+                                git commit -m "upgrade version: ${NEW} ,@refresh:itom-bo-ats"
+                                git push
+                                cd ..
+                                rm -rf containerizing
+
+                                echo "  "
+                            '''
+                        }
+                    }
+                }
+            }
+        }
+    }
+    post{
+        success{
+            script{
+                if ('true' == "${release}") {
+                    notification "good", "bo-account-tenant release ${env.VERSION} - ${env.JOB_NAME} ${env.BUILD_NUMBER} (<${env.BUILD_URL}|Open>)"
+                } else {
+                    notification "good", "Build Success - ${env.JOB_NAME} ${env.BUILD_NUMBER} (<${env.BUILD_URL}|Open>)"
+                }
+            }
+        }
+        failure{
+            script{
+                notification 'danger',"Build Failed - ${env.JOB_NAME} ${env.BUILD_NUMBER} (<${env.BUILD_URL}|Open>)",'Failure'
+            }
+        }
+    }
+}

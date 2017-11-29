@@ -1,0 +1,91 @@
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd
+    http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
+
+    <changeSet author="yan" id="80">
+        <createTable tableName="contact_entity">
+            <!-- BaseEntity column -->
+            <column name="id" type="BIGINT">
+                <constraints primaryKey="true" nullable="false" primaryKeyName="CONT_PK"/>
+            </column>
+            <column name="name" type="varchar(255)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="display_label" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+            <column name="description" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+            <column name="code" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+            <column name="owner_id" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+            <column name="created_by" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+            <column name="created_at" type="DATETIME">
+                <constraints nullable="true" />
+            </column>
+            <column name="last_updated_by" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+            <column name="last_updated_at" type="DATETIME">
+                <constraints nullable="true" />
+            </column>
+            <column name="is_deleted" type="BOOLEAN">
+                <constraints nullable="true" />
+            </column>
+            <column name="is_sys_data" type="BOOLEAN">
+                <constraints nullable="true" />
+            </column>
+            <!-- Account Entity Customize column -->
+            <column name="full_name" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="email" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+            <column name="account_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="role" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+            <column name="timezone" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+            <column name="region" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+            <column name="phone" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+            <column name="address" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+        </createTable>
+        <addForeignKeyConstraint baseColumnNames="account_id"
+                                 baseTableName="contact_entity"
+                                 constraintName="cot_acc_fk"
+                                 referencedColumnNames="id"
+                                 referencedTableName="account_entity"/>
+        <sql>
+            ALTER TABLE contact_entity
+            ADD CONSTRAINT CHK_contact_role CHECK (role IN ('PRIMARY_CONTACT', 'SECONDARY_CONTACT', 'EXTERNAL_CUSTOMER_CONTACT', 'INTERNAL_SUPPORT', 'OTHERS'));
+            ALTER TABLE contact_entity
+            ADD CONSTRAINT CHK_contact_region CHECK (region IN ('APJ', 'EMEA', 'AMS'));
+        </sql>
+        <rollback>
+            ALTER TABLE contact_entity DROP CONSTRAINT CHK_contact_role;
+            ALTER TABLE contact_entity DROP CONSTRAINT CHK_contact_region;
+            drop table IF EXISTS contact_entity;
+        </rollback>
+        <addDefaultValue columnDataType="BOOLEAN" columnName="is_deleted" defaultValueBoolean="false" tableName="contact_entity"/>
+        <addDefaultValue columnDataType="BOOLEAN" columnName="is_sys_data" defaultValueBoolean="false" tableName="contact_entity"/>
+    </changeSet>
+
+</databaseChangeLog>
